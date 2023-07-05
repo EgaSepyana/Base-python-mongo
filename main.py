@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import os
-from src.controller import role_controller
+from src.controller import role_controller , public_controller , user_controller
 import uvicorn
 from dotenv import load_dotenv
 
@@ -13,6 +13,8 @@ def Root():
     return {"massage" : "pong"}
 
 app.include_router(role_controller.NewRoleController().GetRouter())
+app.include_router(public_controller.NewPublicController().GetRouter())
+app.include_router(user_controller.NewUserController().GetRouter())
 
 if __name__ == "__main__":
     port = os.getenv("SERVICE_PORT")

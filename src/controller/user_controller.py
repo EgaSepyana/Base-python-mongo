@@ -1,18 +1,19 @@
-from ..service.role_service import NewRoleService
+from ..service.user_service import NewUserService
 from ..model.models import MetadataResponse
 from fastapi import APIRouter , Depends
 from ..middleware.jwt import get_current_user
+from fastapi import APIRouter
 from ..model.models import Response , RequestPaginateion
-from ..model.role_model import Role
+from ..model.user_model import User
 from datetime import datetime
 from .utils import SetMetadataResponse
 
-class NewRoleController():
+class NewUserController():
     def __init__(self):
         self.__auth:dict = Depends(get_current_user)
-        self.__router:APIRouter = APIRouter(prefix="/api/v1/role", tags=["Role"])
+        self.__router:APIRouter = APIRouter(prefix="/api/v1/user", tags=["User"])
         self.__res:Response = Response(metadata=MetadataResponse(messege="" , status=False , timeExecution=""))
-        self.__service:NewRoleService = NewRoleService()
+        self.__service:NewUserService = NewUserService()
 
     def GetRouter(self) -> APIRouter:
         @self.__router.post("/get-all" , response_model=Response)
@@ -25,7 +26,7 @@ class NewRoleController():
                 return SetMetadataResponse(datetime.now() , self.__res)
 
         @self.__router.get("/get-one" , response_model=Response)
-        def Get_One(id: str, current_user = self.__auth):
+        def Get_One(id: str , current_user = self.__auth):
             try:
                 self.__res = self.__service.GetOne("_id" , id , self.__res)
             except:
@@ -34,7 +35,7 @@ class NewRoleController():
                 return SetMetadataResponse(datetime.now() , self.__res)
 
         @self.__router.post("/add" , response_model=Response)
-        def Add(param: Role , current_user = self.__auth) -> Response:
+        def Add(param: User, current_user = self.__auth) -> Response:
             try:
                 self.__res = self.__service.Upsert(False , param.dict(by_alias=True) , self.__res)
             except:
@@ -44,7 +45,7 @@ class NewRoleController():
                 
             
         @self.__router.put("/update" , response_model=Response)
-        def Update(param: Role , current_user = self.__auth):
+        def Update(param: User , current_user = self.__auth):
             try:
                 self.__res = self.__service.Upsert(True , param.dict(by_alias=True) , self.__res)
             except:
@@ -53,7 +54,7 @@ class NewRoleController():
                 return SetMetadataResponse(datetime.now() , self.__res)
 
         @self.__router.delete("/delete", response_model=Response)
-        def DeleteOne(id :str , current_user = self.__auth):
+        def DeleteOne(id :str, current_user = self.__auth):
             try:
                 self.__res = self.__service.DeleteOne("_id" , id , self.__res)
             except Exception as e :

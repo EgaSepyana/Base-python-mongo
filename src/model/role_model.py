@@ -1,4 +1,3 @@
-from pydantic import BaseModel
 from .models import MetadataWithId
 
 class Role(MetadataWithId):

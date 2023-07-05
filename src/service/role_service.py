@@ -34,9 +34,9 @@ class NewRoleService:
 
     def Upsert(self, isUpdate:bool , param:dict , res:Response) -> Response:
         if isUpdate:
-            res.metadata.messege , res.data = self.__dbUtil.UpdateData(param)
-            return res
-        
-        res.metadata.messege , res.data = self.__dbUtil.InsertData(param)
+            res.metadata.messege , res.data = self.__dbUtil.UpdateData({"_id" : param["_id"]},param)
+        else :
+            res.metadata.messege , res.data = self.__dbUtil.InsertData(param)
+
         return res
         
